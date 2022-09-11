@@ -6,7 +6,6 @@
 
 import React, {Component} from 'react';
 import {
-  AppRegistry,
   StyleSheet,
   Text,
   View,
@@ -15,6 +14,7 @@ import {
   TouchableHighlight,
   ScrollView,
 } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
 
 // import ModalDropdown from 'react-native-modal-dropdown';
 import ModalDropdown from './ModalDropdown';
@@ -32,12 +32,12 @@ const DEMO_OPTIONS_2 = [
   {"name": "Phil", "age": 24},
 ];
 
-class Demo extends Component {
+class App extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      dropdown_4_options: null,
+      dropdown_4_options: [],
       dropdown_4_defaultValue: 'loading...',
       dropdown_6_icon_heart: true,
     };
@@ -47,10 +47,13 @@ class Demo extends Component {
     const dropdown_6_icon = this.state.dropdown_6_icon_heart ? require('./images/heart.png') : require('./images/flower.png');
     return (
       <View style={styles.container}>
+        <StatusBar style="auto" />
         <View style={styles.row}>
           <View style={styles.cell}>
             <ModalDropdown style={styles.dropdown_1}
                            options={DEMO_OPTIONS_1}
+                           renderButtonComponent={TouchableHighlight}
+                           renderButtonProps={{ underlayColor: 'lightgray' }}
             />
             <ModalDropdown style={styles.dropdown_6}
                            options={DEMO_OPTIONS_1}
@@ -68,6 +71,7 @@ class Demo extends Component {
                            options={DEMO_OPTIONS_2}
                            renderButtonText={(rowData) => this._dropdown_2_renderButtonText(rowData)}
                            renderRow={this._dropdown_2_renderRow.bind(this)}
+                           renderRowComponent={TouchableHighlight}
                            renderSeparator={(sectionID, rowID, adjacentRowHighlighted) => this._dropdown_2_renderSeparator(sectionID, rowID, adjacentRowHighlighted)}
             />
             <TouchableOpacity onPress={() => {
@@ -148,17 +152,15 @@ class Demo extends Component {
     let icon = highlighted ? require('./images/heart.png') : require('./images/flower.png');
     let evenRow = rowID % 2;
     return (
-      <TouchableHighlight >
-        <View style={[styles.dropdown_2_row, {backgroundColor: evenRow ? 'lemonchiffon' : 'white'}]}>
-          <Image style={styles.dropdown_2_image}
-                 mode='stretch'
-                 source={icon}
-          />
-          <Text style={[styles.dropdown_2_row_text, highlighted && {color: 'mediumaquamarine'}]}>
-            {`${rowData.name} (${rowData.age})`}
-          </Text>
-        </View>
-      </TouchableHighlight>
+      <View style={[styles.dropdown_2_row, {backgroundColor: evenRow ? 'lemonchiffon' : 'white'}]}>
+        <Image style={styles.dropdown_2_image}
+                mode='stretch'
+                source={icon}
+        />
+        <Text style={[styles.dropdown_2_row_text, highlighted && {color: 'mediumaquamarine'}]}>
+          {`${rowData.name} (${rowData.age})`}
+        </Text>
+      </View>
     );
   }
 
@@ -186,7 +188,7 @@ class Demo extends Component {
 
   _dropdown_4_willHide() {
     this.setState({
-      dropdown_4_options: null,
+      dropdown_4_options: [],
       dropdown_4_defaultValue: 'loading',
     });
   }
@@ -344,4 +346,4 @@ const styles = StyleSheet.create({
   },
 });
 
-AppRegistry.registerComponent('Demo', () => Demo);
+export default App;
